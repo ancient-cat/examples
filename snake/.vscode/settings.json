@@ -1,0 +1,27 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[typescript]": {},
+  "prettier.requireConfig": true,
+  "prettier.enable": true,
+  "prettier.trailingComma": "es5",
+  "prettier.tabWidth": 2,
+  "prettier.semi": true,
+  "prettier.singleQuote": false,
+  "prettier.arrowParens": "always",
+  "prettier.bracketSpacing": true,
+  "prettier.printWidth": 120,
+  "prettier.useTabs": false,
+  "prettier.proseWrap": "preserve",
+  "Lua.diagnostics.globals": ["love"],
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "extended-embedded-languages.languages": {
+    "typescript": {
+      "glsl": [
+        "glsl",
+        "\\bglsl`", // For tagged template literal
+        "/\\*glsl\\*/" // For inline comments
+      ]
+    }
+  }
+}

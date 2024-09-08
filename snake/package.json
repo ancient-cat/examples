@@ -1,0 +1,46 @@
+{
+  "name": "@ancient-cat/ancient-love",
+  "description": "A set of tools on top of typescript2lua and love2d for building games",
+  "version": "0.1.0",
+  "main": "index",
+  "type": "module",
+  "keywords": [
+    "typescript2lua",
+    "love2d",
+    "videogames"
+  ],
+  "scripts": {
+    "start": "npm run build && npm run love",
+    "love": "love ./build",
+    "clean": "rm -rf ./build",
+    "prepare": "npx shx mkdir -p ./build && npx shx mkdir -p ./res && shx cp -R res build/",
+    "build": "tstl",
+    "hmr": "love ./build --hmr",
+    "watch": "npm run build -- --watch",
+    "dev": "conc npm:watch --names dev -c=#22dda5",
+    "format": "npx prettier --config=./prettier.config.js . --write",
+    "format:check": "npx prettier --config=./prettier.config.js . --check"
+  },
+  "author": "Rory Duncan",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "@types/eslint__js": "^8.42.3",
+    "@typescript-to-lua/language-extensions": "^1.19.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^9.1.0",
+    "love-typescript-definitions": "^11.4.3",
+    "lua-types": "^2.13.1",
+    "prettier": "^3.3.3",
+    "shx": "^0.3.4",
+    "typescript": "5.5.2",
+    "typescript-eslint": "^8.0.0",
+    "typescript-to-lua": "^1.26.2"
+  },
+  "dependencies": {
+    "cam11": "file:packages/cam11",
+    "flux": "file:packages/flux",
+    "packages": "file:packages"
+  }
+}
