@@ -5,18 +5,11 @@ import { Scenes } from "./core/scene";
 
 import { game_events } from "./game";
 
-import scene_test from "./core/test_scenes/scene_test";
-import stores_test from "./core/test_scenes/stores_test";
-import gametime_test from "./core/test_scenes/gametime_test";
-import tween_test from "./core/test_scenes/tween_test";
-import camera_test from "./core/test_scenes/camera_test";
-import color_test from "./core/test_scenes/color_test";
-import ui_test from "./core/test_scenes/ui_test";
-import collisions_test from "./core/test_scenes/collisions_test";
-
 import { GameTime } from "./core/systems/gametime";
 import { flux } from "flux";
 import main_menu from "./scenes/main_menu";
+import game from "./scenes/game";
+import game_over from "./scenes/game_over";
 
 math.randomseed(os.clock());
 love.load = (arg: string[]) => {
@@ -26,10 +19,15 @@ love.load = (arg: string[]) => {
     love.event.quit();
   });
 
+  game_events.on("gameover", () => {
+    console.log("GAME OVER");
+    Scenes.switch(game_over);
+  });
+
   game_events.on("start", () => {
     console.log("Starting game...");
     // Start here
-    Scenes.switch(collisions_test);
+    Scenes.switch(game);
   });
 };
 
