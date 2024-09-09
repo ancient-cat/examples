@@ -1,25 +1,6 @@
-# ancient-love
+# Snake
 
-## modules
+You can watch the initial work for building this game, here:
+> https://www.youtube.com/live/CQtILgzZaYc
 
-- [x] logging
-- [x] scene
-- [x] ECS
-- [x] timer
-- [x] signals
-- [x] Observables
-- [x] camera
-- [x] tween
-- [x] color
-- [x] GLSL shader syntax highlighting
-- [ ] controller / input mapping
-- [ ] advanced collisions
-- [ ] collision system
-- [ ] curved geometries / lerp'd things
-- [ ] UI
-- [ ] Sound Mixer
-
-### Not included, for now
-
-- animations
-- bones / splines
+About another hour of polish was added later, after the recording
