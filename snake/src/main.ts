@@ -10,6 +10,7 @@ import { flux } from "flux";
 import main_menu from "./scenes/main_menu";
 import game from "./scenes/game";
 import game_over from "./scenes/game_over";
+import tween_test from "./core/test_scenes/tween_test";
 
 math.randomseed(os.clock());
 love.load = (arg: string[]) => {
@@ -20,13 +21,26 @@ love.load = (arg: string[]) => {
   });
 
   game_events.on("gameover", () => {
-    console.log("GAME OVER");
-    Scenes.switch(game_over);
+    Scenes.push(game_over, {
+      draw: true,
+      handlers: false,
+      update: false,
+    });
   });
 
   game_events.on("start", () => {
-    console.log("Starting game...");
-    // Start here
+    Scenes.switch(game);
+  });
+
+  game_events.on("win", () => {
+    console.log("You win");
+    // where to continue here:
+    // create a won_game scene,
+    // add the ability to "next level", with a larger grid size
+  });
+
+  game_events.on("restart", () => {
+    Scenes.pop(); // clear game over state
     Scenes.switch(game);
   });
 };

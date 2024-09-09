@@ -1,5 +1,4 @@
 import { ColorType } from "../core/color";
-import console from "../core/console";
 import { Scenes } from "../core/scene";
 import { game_events } from "../game";
 
@@ -20,16 +19,19 @@ export default Scenes.create(() => {
 
   let snake: SnakePart[] = [];
 
-  const [grid_rows, grid_cols] = [20, 20];
+  const [grid_rows, grid_cols] = [6, 6];
 
   let grid: GridItem[] = [];
 
   const unit = 20;
+  let collected_fruit: number = 0;
+  let max_fruit = 0;
+  let has_won = false;
 
-  let fruit: GridItem;
+  let fruit: GridItem & { color: ColorType };
 
   const draw_grid = () => {
-    love.graphics.setColor(grid_color.rgb);
+    love.graphics.setColor(...grid_color.rgb);
 
     grid.forEach(({ row, col }) => {
       love.graphics.rectangle("line", row * unit, col * unit, unit, unit);
@@ -37,19 +39,28 @@ export default Scenes.create(() => {
   };
 
   const draw_snake = () => {
-    love.graphics.setColor(snake_color.rgb);
-    snake.forEach((part) => {
+    love.graphics.setColor(...snake_color.rgb);
+    snake.forEach((part, i) => {
+      const c: [number, number, number, number] = [...snake_color.rgb];
+      c[3] = math.max(0.5, snake.length / i);
+      love.graphics.setColor(...c);
       love.graphics.rectangle("fill", part.row * unit + 1, part.col * unit + 1, unit - 2, unit - 2);
     });
   };
 
   const spawn_fruit = () => {
     let is_empty_cell = false;
+
+    // this while loop would crash it if we won
+    // rewriting it to not randomly find an empty spot endlessly is preferred, tbh
+    // but being lazy
+    if (snake.length === max_fruit) {
+      return;
+    }
+
     while (!is_empty_cell) {
       const x = math.random(0, grid_rows - 1);
       const y = math.random(0, grid_cols - 1);
-
-      console.log("Attempting spawn at", x, y);
 
       const match = snake.find((segment) => {
         return segment.col === y && segment.row === x;
@@ -60,6 +71,7 @@ export default Scenes.create(() => {
         fruit = {
           row: x,
           col: y,
+          color: new ColorType(math.random(0, 360), 90, 60),
         };
       }
     }
@@ -85,6 +97,12 @@ export default Scenes.create(() => {
 
     let should_spawn_fruit = false;
     if (new_head.row === fruit.row && new_head.col === fruit.col) {
+      collected_fruit += 1;
+
+      if (collected_fruit === max_fruit) {
+        has_won = true;
+      }
+
       should_spawn_fruit = true;
       const last_piece = snake.at(-1);
       if (last_piece) {
@@ -128,20 +146,23 @@ export default Scenes.create(() => {
     },
 
     enter: () => {
+      has_won = false;
+      collected_fruit = 0;
       snake = [
         {
           row: 3,
-          col: 3,
+          col: 0,
         },
         {
-          row: 3,
-          col: 4,
+          row: 2,
+          col: 0,
         },
         {
-          row: 3,
-          col: 5,
+          row: 1,
+          col: 0,
         },
       ];
+      max_fruit = grid_rows * grid_cols - snake.length;
       spawn_fruit();
     },
 
@@ -166,6 +187,11 @@ export default Scenes.create(() => {
         return;
       }
 
+      if (has_won) {
+        game_events.emit("win");
+        return;
+      }
+
       if (has_wrapped_self()) {
         game_events.emit("gameover");
       }
@@ -175,14 +201,20 @@ export default Scenes.create(() => {
     },
 
     draw() {
-      love.graphics.setBackgroundColor(bg_color.rgb);
+      love.graphics.setBackgroundColor(...bg_color.rgb);
       love.graphics.push();
-      love.graphics.translate(unit * 2, unit * 2);
+      const grid_width = grid_rows * unit;
+      const grid_height = grid_cols * unit;
+      const [w, h] = love.graphics.getDimensions();
+      const x_margin = (w - grid_width) / 2;
+      const y_margin = (h - grid_height) / 2;
+      love.graphics.translate(x_margin, y_margin);
       draw_grid();
       draw_snake();
 
-      love.graphics.setColor(math.random(50, 100) / 100, math.random(50, 100) / 100, math.random(50, 100) / 100);
-      love.graphics.rectangle("fill", fruit.row * unit, fruit.col * unit, unit, unit);
+      love.graphics.setColor(...fruit.color.rgb);
+
+      love.graphics.rectangle("fill", fruit.row * unit + 2, fruit.col * unit + 2, unit - 4, unit - 4);
 
       love.graphics.pop();
     },

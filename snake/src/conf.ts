@@ -1,7 +1,7 @@
 import type { Config } from "love";
 
 love.conf = (config: Config) => {
-  config.window.title = "New Game";
+  config.window.title = "Snake";
   config.console = true;
-  config.window.resizable = true;
+  config.window.resizable = false;
 };

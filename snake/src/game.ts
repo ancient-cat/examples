@@ -4,8 +4,10 @@ import { ECS } from "./ecs";
 
 export type GameEvents = {
   start: undefined;
+  restart: undefined;
   quit: undefined;
   gameover: undefined;
+  win: undefined;
 };
 
 export const game_events = create_event_dispatcher<GameEvents>();
